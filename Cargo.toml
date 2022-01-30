@@ -1,0 +1,74 @@
+[workspace]
+members = [
+    "core/chain-configs",
+    "core/crypto",
+    "core/account-id",
+    "core/account-id/fuzz",
+    "core/primitives",
+    "core/primitives-core",
+    "core/store",
+    "core/metrics",
+    "runtime/near-vm-logic",
+    "runtime/near-vm-runner",
+    "runtime/near-vm-runner/fuzz",
+    "runtime/near-vm-runner-standalone",
+    "runtime/runtime",
+    "runtime/runtime-params-estimator",
+    "chain/chain",
+    "chain/chunks",
+    "chain/epoch_manager",
+    "chain/pool",
+    "chain/client",
+    "chain/client-primitives",
+    "chain/network",
+    "chain/indexer",
+    "chain/jsonrpc",
+    "chain/jsonrpc/fuzz",
+    "chain/jsonrpc/client",
+    "chain/jsonrpc/jsonrpc-tests",
+    "chain/jsonrpc-primitives",
+    "chain/jsonrpc-adversarial-primitives",
+    "chain/rosetta-rpc",
+    "test-utils/actix-test-utils",
+    "test-utils/runtime-tester",
+    "test-utils/runtime-tester/fuzz",
+    "test-utils/state-viewer",
+    "test-utils/store-validator",
+    "test-utils/testlib",
+    "neard",
+    "nearcore",
+    "tools/rpctypegen/core",
+    "tools/rpctypegen/macro",
+    "genesis-tools/genesis-csv-to-json",
+    "genesis-tools/genesis-populate",
+    "genesis-tools/keypair-generator",
+    "tools/restaked",
+    "tools/indexer/example",
+    "tools/delay_detector",
+    "tools/storage-usage-delta-calculator",
+    "tools/restored-receipts-verifier",
+    "tools/themis",
+    "integration-tests",
+    "utils/near-rate-limiter",
+    "utils/near-cache",
+]
+
+[workspace.metadata.workspaces]
+version = "0.11.0"
+
+[patch.crates-io]
+
+[profile.release]
+overflow-checks = true
+
+[profile.bench]
+overflow-checks = true
+
+[profile.dev.package.hex]
+opt-level = 3 # BLS library is too slow to use in debug
+
+[profile.dev.package.rand]
+opt-level = 3 # BLS library is too slow to use in debug
+
+[profile.dev.package.bs58]
+opt-level = 3 # bs58 library is too slow to use in debug

@@ -1,0 +1,113 @@
+targets = [
+    { triple = "x86_64-unknown-linux-musl" },
+    { triple = "x86_64-pc-windows-msvc" },
+    { triple = "x86_64-apple-darwin" },
+]
+
+[bans]
+multiple-versions = "deny"
+deny = [
+    # See: https://github.com/rust-random/rand/issues/645
+    { name = "rand", version = "<0.6" },
+
+    # See: https://github.com/near/nearcore/pull/3595
+    { name = "keccak-hash", version = "<0.4.1" },
+    { name = "primitive-types", version = "<0.10.1" },
+    { name = "uint", version = "<0.8.2" },
+]
+
+skip = [
+    { name = "clap", version = "=2.33.3" },
+    { name = "humantime", version = "=2.1.0" },
+    { name = "textwrap", version = "=0.12.1" },
+
+    # many crates (borsh, indexmap, cached, ...) use this older version
+    { name = "hashbrown", version = "=0.9.1" },
+
+    # insta uses older version of console
+    { name = "console", version = "=0.14.1" },
+    # near-epoch-manager fixed the rand version to ensure protocol stability
+    { name = "rand", version = "=0.6.5" },
+    # rand 0.6.5 uses two versions of rand_core due to weird dependencies mismatch with rand_chacha
+    { name = "rand_core", version = "=0.3.1" },
+    { name = "rand_chacha", version = "=0.1.1" },
+    { name = "autocfg", version = "=0.1.7" },
+    # wasmer 0.17 and wasmtime 0.17 use conflicting versions of those
+    { name = "base64", version = "=0.11.0" },
+    { name = "wasmparser", version = "=0.51.4" },
+    { name = "rand_core", version = "=0.4.2" },
+    # wasmer 0.17 and wasmtime 0.17 uses older versions of some crates
+    { name = "generic-array", version = "=0.12.4" },
+
+    # `sha2` uses it
+    { name = "cfg-if", version = "=1.0.0" },
+
+    # Wasmer 2.0 indirectly uses this outdated version.
+    { name = "memmap2", version = "=0.2.3" },
+    # Wasmer 2.0 uses newer object
+    { name = "object", version = "=0.27.1" },
+    # Wasmer 2.0 uses both region 2.2.0 and 3.0.0 via dependencies
+    { name = "region", version = "=2.2.0" },
+    # Wasmtime 0.17 use rely older wasmparser.
+    { name = "wasmparser", version = "=0.76.0" },
+    # Wasmtime 0.17 use older target-lexicon.
+    { name = "target-lexicon", version = "=0.11.2" },
+    # Need this specific version of pwasm-utils for backwards-compatible
+    # stack limiting.
+    { name = "pwasm-utils", version = "=0.12.0" },
+    { name = "parity-wasm", version = "=0.41.0" },
+
+    # param estimator uses newer imports, but it's not part of neard
+    { name = "indicatif", version = "=0.15.0" },
+    { name = "rand_xorshift", version = "=0.2.0" },
+    { name = "wasmparser", version = "=0.59.0" },
+
+    # wasmtime and actix-http
+    { name = "gimli", version = "=0.23.0" },
+
+    # wasmer and wasmtime
+    { name = "target-lexicon", version = "=0.10.0" },
+
+    # chain and param estimator
+    { name = "num-rational", version = "=0.3.2" },
+
+    # tracing-subscriber via near-logger-utils and clap via bindgen
+    { name = "ansi_term", version = "=0.12.1" },
+
+    # wasmer 0.17.x
+    { name = "parking_lot", version = "=0.10.2" },
+    { name = "parking_lot_core", version = "=0.7.2" },
+    { name = "lock_api", version = "=0.3.4" },
+    { name = "digest", version = "=0.8.1" },
+
+    # chrono uses old time crate
+    { name = "time", version = "=0.1.43" },
+
+    # clap v2 uses old versions
+    { name = "strsim", version = "0.8.0" },
+
+    # ed25519-dalek uses older versions of rand and rand_core
+    { name = "rand", version = "=0.7.3" },
+    { name = "rand_core", version = "=0.5.1" },
+    { name = "rand_chacha", version = "=0.2.2" },
+    { name = "getrandom", version = "=0.1.16" },
+
+    # criterion and criterion-plot use conflicting versions
+    { name = "semver-parser", version = "=0.7.0" },
+    { name = "semver", version = "=0.9.0" },
+
+    # hashbrown uses an older version
+    { name = "ahash", version = "=0.4.7" },
+
+    # zeropool-bn optionally uses the older borsh 0.8.2
+    { name = "borsh", version = "=0.8.2" },
+    { name = "borsh-derive", version = "=0.8.2" },
+    { name = "borsh-derive-internal", version = "=0.8.2" },
+    { name = "borsh-schema-derive-internal", version = "=0.8.2" },
+
+    # wasmer-runtime-core-near and parity-secp256k1 use an older version
+    { name = "arrayvec", version = "=0.5.2" },
+
+    # borsh uses a very old version of proc-macro-crate
+    { name = "proc-macro-crate", version = "=0.1.5" }
+]
