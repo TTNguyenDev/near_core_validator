@@ -963,6 +963,7 @@ impl ClientActor {
     /// Process all blocks that were accepted by calling other relevant services.
     fn process_accepted_blocks(&mut self, accepted_blocks: Vec<AcceptedBlock>) {
         for accepted_block in accepted_blocks {
+            let accepted_block_clone = accepted_block.clone();
             self.client.on_block_accepted(
                 accepted_block.hash,
                 accepted_block.status,
@@ -973,6 +974,12 @@ impl ClientActor {
             let gas_used = Block::compute_gas_used(block.chunks().iter(), block.header().height());
 
             let last_final_hash = *block.header().last_final_block();
+            
+            info!(
+                "process_accepted_blocks {:?}, block info {:?}",
+                accepted_block_clone,
+                block.clone()
+            );
 
             self.info_helper.block_processed(gas_used, chunks_in_block as u64);
             self.check_send_announce_account(last_final_hash);

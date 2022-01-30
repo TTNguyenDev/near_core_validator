@@ -246,7 +246,7 @@ impl Stats {
     }
 
     fn print_stats(&mut self, sleep_time: Duration) {
-        info!(
+        log::info!(
             "Performance stats {} threads (min ratio = {})",
             self.stats.len(),
             MIN_OCCUPANCY_RATIO_THRESHOLD

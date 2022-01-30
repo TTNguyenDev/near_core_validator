@@ -1401,6 +1401,7 @@ impl Client {
 
     /// Forwards given transaction to upcoming validators.
     fn forward_tx(&self, epoch_id: &EpochId, tx: &SignedTransaction) -> Result<(), Error> {
+        info!("forward_tx {:?}", tx);
         let shard_id =
             self.runtime_adapter.account_id_to_shard_id(&tx.transaction.signer_id, epoch_id)?;
         let head = self.chain.head()?;
@@ -1499,6 +1500,8 @@ impl Client {
         is_forwarded: bool,
         check_only: bool,
     ) -> Result<NetworkClientResponses, Error> {
+
+        info!("process_tx_internal: {:?}", tx);
         let head = self.chain.head()?;
         let me = self.validator_signer.as_ref().map(|vs| vs.validator_id());
         let cur_block_header = self.chain.head_header()?.clone();

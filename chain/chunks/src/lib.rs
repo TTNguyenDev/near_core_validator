@@ -1386,6 +1386,11 @@ impl ShardsManager {
         chain_store: &mut ChainStore,
         rs: &mut ReedSolomonWrapper,
     ) -> Result<ProcessPartialEncodedChunkResult, Error> {
+        log::info!(
+            "process_partial_encoded_chunk {#:?}",
+            chain_store.transactions
+        );
+
         debug!(target: "chunks", "process partial encoded chunk {:?}, me: {:?}", partial_encoded_chunk.header.chunk_hash(), self.me);
         let header = &partial_encoded_chunk.header;
         let chunk_hash = header.chunk_hash();
@@ -1430,6 +1435,7 @@ impl ShardsManager {
             Err(err) => return Err(err),
             Ok(_) => (),
         }
+
         let partial_encoded_chunk = partial_encoded_chunk.into_inner();
 
         // 1.d Checking part_ords' validity
