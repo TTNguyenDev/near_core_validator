@@ -9,8 +9,6 @@ use near_primitives::transaction::SignedTransaction;
 use near_primitives::types::AccountId;
 use std::ops::Bound;
 
-use log::info;
-
 mod metrics;
 pub mod types;
 
@@ -47,7 +45,8 @@ impl TransactionPool {
 
     /// Insert a signed transaction into the pool that passed validation.
     pub fn insert_transaction(&mut self, signed_transaction: SignedTransaction) -> bool {
-        info!(
+        log::info!(
+       
             "insert_transaction: {:?}",
             signed_transaction.transaction
         );

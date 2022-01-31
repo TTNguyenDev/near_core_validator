@@ -3043,6 +3043,7 @@ dependencies = [
  "near-primitives",
  "once_cell",
  "rand 0.7.3",
+ "tracing",
 ]
 
 [[package]]
