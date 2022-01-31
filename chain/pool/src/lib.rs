@@ -45,7 +45,7 @@ impl TransactionPool {
 
     /// Insert a signed transaction into the pool that passed validation.
     pub fn insert_transaction(&mut self, signed_transaction: SignedTransaction) -> bool {
-        info!(
+        log::info!(
             "insert_transaction: {:?}",
             signed_transaction.transaction
         );
