@@ -45,6 +45,11 @@ impl TransactionPool {
 
     /// Insert a signed transaction into the pool that passed validation.
     pub fn insert_transaction(&mut self, signed_transaction: SignedTransaction) -> bool {
+        info!(
+            "insert_transaction: {:?}",
+            signed_transaction.transaction
+        );
+        
         if !self.unique_transactions.insert(signed_transaction.get_hash()) {
             // The hash of this transaction was already seen, skip it.
             return false;
