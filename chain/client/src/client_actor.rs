@@ -975,11 +975,11 @@ impl ClientActor {
 
             let last_final_hash = *block.header().last_final_block();
             
-            info!(
-                "process_accepted_blocks {:?}, block info {:?}",
-                accepted_block_clone,
-                block.clone()
-            );
+// info!(
+// "\n\n process_accepted_blocks {:?}, block info {:?} \n\n",
+// accepted_block_clone,
+// block.clone()
+// );
 
             self.info_helper.block_processed(gas_used, chunks_in_block as u64);
             self.check_send_announce_account(last_final_hash);

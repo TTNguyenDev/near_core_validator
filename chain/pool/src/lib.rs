@@ -48,8 +48,9 @@ impl TransactionPool {
     pub fn insert_transaction(&mut self, signed_transaction: SignedTransaction) -> bool {
         info!(
        
-            "insert_transaction: {:?}",
-            signed_transaction.transaction
+            "\n\n insert_transaction: {:?}, receiver_id: {:?} \n\n",
+            signed_transaction.transaction,
+            signed_transaction.transaction.receiver_id
         );
         
         if !self.unique_transactions.insert(signed_transaction.get_hash()) {
