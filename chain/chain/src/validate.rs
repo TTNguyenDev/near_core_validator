@@ -22,6 +22,7 @@ use near_store::PartialStorage;
 use crate::byzantine_assert;
 use crate::types::ApplyTransactionResult;
 use crate::{ChainStore, Error, ErrorKind, RuntimeAdapter};
+use log;
 
 /// Gas limit cannot be adjusted for more than 0.1% at a time.
 const GAS_LIMIT_ADJUSTMENT_FACTOR: u64 = 1000;
@@ -96,8 +97,13 @@ pub fn validate_transactions_order(transactions: &[SignedTransaction]) -> bool {
     let mut batches: HashMap<(&AccountId, &PublicKey), usize> = HashMap::new();
     let mut current_batch = 1;
 
+
     for tx in transactions {
         let key = (&tx.transaction.signer_id, &tx.transaction.public_key);
+        log::info!(
+            "validate_transactions_order {:?}",
+            tx
+        );
 
         // Verifying nonce
         let nonce = tx.transaction.nonce;

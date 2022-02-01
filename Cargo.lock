@@ -2618,6 +2618,7 @@ dependencies = [
  "failure",
  "failure_derive",
  "itertools",
+ "log",
  "lru",
  "near-chain-configs",
  "near-chain-primitives",
