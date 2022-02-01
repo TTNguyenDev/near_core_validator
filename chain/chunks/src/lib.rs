@@ -516,6 +516,20 @@ impl ShardsManager {
     }
 
     pub fn get_pool_iterator(&mut self, shard_id: ShardId) -> Option<PoolIteratorWrapper<'_>> {
+        let pool = self.tx_pools
+            .get_mut(&shard_id)
+            .unwrap();
+
+        let txs: Vec<_> = pool.transactions
+            .clone()
+            .into_values()
+            .collect();
+
+        log::info!(
+            "get_pool_iterator, txs: {:?}",
+            txs
+        );
+        
         self.tx_pools.get_mut(&shard_id).map(|pool| pool.pool_iterator())
     }
 
