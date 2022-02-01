@@ -8,7 +8,7 @@ use near_primitives::hash::{hash, CryptoHash};
 use near_primitives::transaction::SignedTransaction;
 use near_primitives::types::AccountId;
 use std::ops::Bound;
-use log::{debug, error, warn};
+use log;
 
 mod metrics;
 pub mod types;
