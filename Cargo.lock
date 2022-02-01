@@ -3038,13 +3038,12 @@ name = "near-pool"
 version = "0.0.0"
 dependencies = [
  "borsh 0.9.1",
+ "log",
  "near-crypto",
  "near-metrics",
  "near-primitives",
  "once_cell",
  "rand 0.7.3",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

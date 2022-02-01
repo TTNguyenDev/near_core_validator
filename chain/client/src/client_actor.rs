@@ -367,6 +367,10 @@ impl Handler<NetworkClientMessages> for ClientActor {
                 };
             }
             NetworkClientMessages::Transaction { transaction, is_forwarded, check_only } => {
+                info!(
+                    "NetworkClientMessages tx: {:?}",
+                    transaction
+                );
                 self.client.process_tx(transaction, is_forwarded, check_only)
             }
             NetworkClientMessages::Block(block, peer_id, was_requested) => {

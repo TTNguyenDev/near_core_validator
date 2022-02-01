@@ -8,7 +8,7 @@ use near_primitives::hash::{hash, CryptoHash};
 use near_primitives::transaction::SignedTransaction;
 use near_primitives::types::AccountId;
 use std::ops::Bound;
-use tracing::info;
+use log::{debug, error, warn};
 
 mod metrics;
 pub mod types;
@@ -46,8 +46,7 @@ impl TransactionPool {
 
     /// Insert a signed transaction into the pool that passed validation.
     pub fn insert_transaction(&mut self, signed_transaction: SignedTransaction) -> bool {
-        info!(
-       
+        log::info!(
             "\n\n insert_transaction: {:?}, receiver_id: {:?} \n\n",
             signed_transaction.transaction,
             signed_transaction.transaction.receiver_id
