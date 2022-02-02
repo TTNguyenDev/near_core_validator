@@ -100,10 +100,6 @@ pub fn validate_transactions_order(transactions: &[SignedTransaction]) -> bool {
 
     for tx in transactions {
         let key = (&tx.transaction.signer_id, &tx.transaction.public_key);
-        log::info!(
-            "validate_transactions_order {:?}",
-            tx
-        );
 
         // Verifying nonce
         let nonce = tx.transaction.nonce;
@@ -124,6 +120,21 @@ pub fn validate_transactions_order(transactions: &[SignedTransaction]) -> bool {
             return false;
         }
         batches.insert(key, current_batch);
+        /*if tx.transaction.receiver_id == "ref-finance.testnet" {
+            //TODO: Get block_height
+            let block_hash = tx.transaction.block_hash;
+            //TODO: Filter tx with block_height. After that, remove current txs array
+            log::info!(
+                "Ref finance transactions in block {:?}: {:?}",
+                block_hash,
+                tx
+            );
+
+            //TODO: Get state of get_pool fn  
+
+            
+            //TODO: Simulate the new state
+        }*/
     }
     true
 }
@@ -303,6 +314,12 @@ fn validate_chunk_proofs_challenge(
         // Chunk proofs are invalid. Good challenge.
         return account_to_slash_for_valid_challenge;
     }
+
+    log::info!(
+        "Transactions in block_height is {:?}: {:?}",
+        block_header.height(),
+        chunk_ref.transactions(),
+    );
 
     if !validate_transactions_order(chunk_ref.transactions()) {
         // Chunk transactions are invalid. Good challenge.

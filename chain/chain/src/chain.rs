@@ -3522,6 +3522,13 @@ impl<'a> ChainUpdate<'a> {
                         .get_chunk_clone_from_header(&chunk_header.clone())?;
 
                     let transactions = chunk.transactions();
+                    info!(
+                        "Transactions in shard {:?} with block_height is {:?}: {:?}",
+                        shard_id,
+                        block.header().height(),
+                        transactions,
+                    );
+                    
                     if !validate_transactions_order(transactions) {
                         let merkle_paths =
                             Block::compute_chunk_headers_root(block.chunks().iter()).1;

@@ -7,7 +7,7 @@ use near_crypto::Signature;
 use crate::hash::{hash, CryptoHash};
 use crate::merkle::{combine_hash, merklize, MerklePath};
 use crate::receipt::Receipt;
-use crate::transaction::SignedTransaction;
+use crate::transaction::{Transaction, SignedTransaction};
 use crate::types::validator_stake::{ValidatorStake, ValidatorStakeIter, ValidatorStakeV1};
 use crate::types::{Balance, BlockHeight, Gas, MerkleHash, ShardId, StateRoot};
 use crate::validator_signer::ValidatorSigner;
@@ -653,6 +653,14 @@ pub struct ShardChunkV2 {
 pub enum ShardChunk {
     V1(ShardChunkV1),
     V2(ShardChunkV2),
+}
+
+//NOTE: Tracking ref-finance model
+#[cfg_attr(feature = "deepsize_feature", derive(deepsize::DeepSizeOf))]
+#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq)]
+pub struct ReffinanceTrackingTxs {
+    pub block_hash: CryptoHash,
+    pub txs: Vec<Transaction>, 
 }
 
 impl ShardChunk {
