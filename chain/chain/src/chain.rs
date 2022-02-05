@@ -3533,7 +3533,7 @@ impl<'a> ChainUpdate<'a> {
                     //         );
                     let state_root = prev_chunk_extra.state_root();
 
-                    let args = FunctionArgs::from("eyJmcm9tX2luZGV4IjogMCwgImxpbWl0IjogMTB9".as_bytes().to_vec());
+                    let args = FunctionArgs::from("{\"from_index\": 0, \"limit\": 10}".as_bytes().to_vec());
                     let request = QueryRequest::CallFunction {
                             account_id: AccountId::from_str("ref-finance.testnet").unwrap(),
                             method_name: "get_pools".to_string(),
