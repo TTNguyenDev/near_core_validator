@@ -22,7 +22,6 @@ use near_store::PartialStorage;
 use crate::byzantine_assert;
 use crate::types::ApplyTransactionResult;
 use crate::{ChainStore, Error, ErrorKind, RuntimeAdapter};
-use log;
 
 /// Gas limit cannot be adjusted for more than 0.1% at a time.
 const GAS_LIMIT_ADJUSTMENT_FACTOR: u64 = 1000;
@@ -314,12 +313,6 @@ fn validate_chunk_proofs_challenge(
         // Chunk proofs are invalid. Good challenge.
         return account_to_slash_for_valid_challenge;
     }
-
-    log::info!(
-        "Transactions in block_height is {:?}: {:?}",
-        block_header.height(),
-        chunk_ref.transactions(),
-    );
 
     if !validate_transactions_order(chunk_ref.transactions()) {
         // Chunk transactions are invalid. Good challenge.

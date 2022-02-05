@@ -1,4 +1,5 @@
 use std::collections::{HashMap, HashSet};
+use std::str::FromStr;
 use std::sync::Arc;
 use std::time::{Duration as TimeDuration, Instant};
 
@@ -35,14 +36,14 @@ use near_primitives::transaction::ExecutionOutcomeWithIdAndProof;
 use near_primitives::types::chunk_extra::ChunkExtra;
 use near_primitives::types::{
     AccountId, Balance, BlockExtra, BlockHeight, BlockHeightDelta, EpochId, Gas, MerkleHash,
-    NumBlocks, NumShards, ShardId, StateChangesForSplitStates, StateRoot,
+    NumBlocks, NumShards, ShardId, StateChangesForSplitStates, StateRoot, FunctionArgs,
 };
 use near_primitives::unwrap_or_return;
 use near_primitives::utils::MaybeValidated;
 use near_primitives::views::{
     ExecutionOutcomeWithIdView, ExecutionStatusView, FinalExecutionOutcomeView,
     FinalExecutionOutcomeWithReceiptView, FinalExecutionStatus, LightClientBlockView,
-    SignedTransactionView,
+    SignedTransactionView, QueryRequest,
 };
 use near_store::{ColState, ColStateHeaders, ColStateParts, ShardTries, StoreUpdate};
 
@@ -3522,6 +3523,41 @@ impl<'a> ChainUpdate<'a> {
                         .get_chunk_clone_from_header(&chunk_header.clone())?;
 
                     let transactions = chunk.transactions();
+
+                    // Ref tracking
+                    let header = block.header();
+                    let current_chunk_extra = self.chain_store_update
+                            .get_chunk_extra(
+                                header.hash(), 
+                                &shard_uid
+                            );
+                    let state_root = current_chunk_extra.unwrap().state_root();
+
+                    let args = FunctionArgs::from("e2Zyb21faW5kZXg6IDAsIGxpbWl0OiAxMH0=".as_bytes().to_vec());
+                    let request = QueryRequest::CallFunction {
+                            account_id: AccountId::from_str("ref-finance.testnet").unwrap(),
+                            method_name: "get_pools".to_string(),
+                            args 
+                        };
+
+                    let current_state = self.runtime_adapter
+                        .query(
+                                shard_uid,
+                                state_root, 
+                                header.height(), 
+                                header.raw_timestamp(),
+                                header.prev_hash(), 
+                                header.hash(), 
+                                header.epoch_id(), 
+                                &request
+                            );
+
+                    // Get current state of ref finance
+                    info!(
+                        "Current state of ref finance: {:?}",
+                        current_state
+                    );
+
                     info!(
                         "Transactions in shard {:?} with block_height is {:?}: {:?}",
                         shard_id,
