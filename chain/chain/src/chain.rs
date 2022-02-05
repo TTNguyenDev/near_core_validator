@@ -1,5 +1,4 @@
 use std::collections::{HashMap, HashSet};
-use std::str::FromStr;
 use std::sync::Arc;
 use std::time::{Duration as TimeDuration, Instant};
 
@@ -10,6 +9,7 @@ use near_primitives::time::Clock;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
+use serde_json::json;
 use tracing::{debug, error, info, warn};
 
 use near_chain_primitives::error::{Error, ErrorKind, LogTransientStorageError};
@@ -35,15 +35,15 @@ use near_primitives::syncing::{
 use near_primitives::transaction::ExecutionOutcomeWithIdAndProof;
 use near_primitives::types::chunk_extra::ChunkExtra;
 use near_primitives::types::{
-    AccountId, Balance, BlockExtra, BlockHeight, BlockHeightDelta, EpochId, Gas, MerkleHash,
-    NumBlocks, NumShards, ShardId, StateChangesForSplitStates, StateRoot, FunctionArgs,
+    AccountId, Balance, BlockExtra, BlockHeight, BlockHeightDelta, EpochId, FunctionArgs, Gas,
+    MerkleHash, NumBlocks, NumShards, ShardId, StateChangesForSplitStates, StateRoot,
 };
 use near_primitives::unwrap_or_return;
 use near_primitives::utils::MaybeValidated;
 use near_primitives::views::{
     ExecutionOutcomeWithIdView, ExecutionStatusView, FinalExecutionOutcomeView,
-    FinalExecutionOutcomeWithReceiptView, FinalExecutionStatus, LightClientBlockView,
-    SignedTransactionView, QueryRequest,
+    FinalExecutionOutcomeWithReceiptView, FinalExecutionStatus, LightClientBlockView, QueryRequest,
+    SignedTransactionView,
 };
 use near_store::{ColState, ColStateHeaders, ColStateParts, ShardTries, StoreUpdate};
 
@@ -3528,35 +3528,37 @@ impl<'a> ChainUpdate<'a> {
                     let header = block.header();
                     // let current_chunk_extra = self.chain_store_update
                     //         .get_chunk_extra(
-                    //             header.hash(), 
+                    //             header.hash(),
                     //             &shard_uid
                     //         );
                     let state_root = prev_chunk_extra.state_root();
 
-                    let args = FunctionArgs::from("{\"from_index\": 0, \"limit\": 10}".as_bytes().to_vec());
                     let request = QueryRequest::CallFunction {
-                            account_id: AccountId::from_str("ref-finance.testnet").unwrap(),
-                            method_name: "get_pools".to_string(),
-                            args 
-                        };
+                        account_id: "ref-finance.testnet".parse().unwrap(),
+                        method_name: "get_pools".to_string(),
+                        args: FunctionArgs::from(
+                            json!({
+                                "from_index": 0,
+                                "limit": 10
+                            })
+                            .to_string()
+                            .into_bytes(),
+                        ),
+                    };
 
-                    let current_state = self.runtime_adapter
-                        .query(
-                                shard_uid,
-                                state_root, 
-                                header.height(), 
-                                header.raw_timestamp(),
-                                header.prev_hash(), 
-                                header.hash(), 
-                                header.epoch_id(), 
-                                &request
-                            );
+                    let current_state = self.runtime_adapter.query(
+                        shard_uid,
+                        state_root,
+                        header.height(),
+                        header.raw_timestamp(),
+                        header.prev_hash(),
+                        header.hash(),
+                        header.epoch_id(),
+                        &request,
+                    );
 
                     // Get current state of ref finance
-                    info!(
-                        "Current state of ref finance: {:?}",
-                        current_state
-                    );
+                    info!("Current state of ref finance: {:?}", current_state);
 
                     info!(
                         "Transactions in shard {:?} with block_height is {:?}: {:?}",
@@ -3564,7 +3566,7 @@ impl<'a> ChainUpdate<'a> {
                         block.header().height(),
                         transactions,
                     );
-                    
+
                     if !validate_transactions_order(transactions) {
                         let merkle_paths =
                             Block::compute_chunk_headers_root(block.chunks().iter()).1;
