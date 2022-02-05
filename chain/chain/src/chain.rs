@@ -3526,12 +3526,12 @@ impl<'a> ChainUpdate<'a> {
 
                     // Ref tracking
                     let header = block.header();
-                    let current_chunk_extra = self.chain_store_update
-                            .get_chunk_extra(
-                                header.hash(), 
-                                &shard_uid
-                            );
-                    let state_root = current_chunk_extra.unwrap().state_root();
+                    // let current_chunk_extra = self.chain_store_update
+                    //         .get_chunk_extra(
+                    //             header.hash(), 
+                    //             &shard_uid
+                    //         );
+                    let state_root = prev_chunk_extra.state_root();
 
                     let args = FunctionArgs::from("e2Zyb21faW5kZXg6IDAsIGxpbWl0OiAxMH0=".as_bytes().to_vec());
                     let request = QueryRequest::CallFunction {
