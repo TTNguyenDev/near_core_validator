@@ -43,7 +43,7 @@ use near_primitives::utils::MaybeValidated;
 use near_primitives::views::{
     ExecutionOutcomeWithIdView, ExecutionStatusView, FinalExecutionOutcomeView,
     FinalExecutionOutcomeWithReceiptView, FinalExecutionStatus, LightClientBlockView, QueryRequest,
-    SignedTransactionView,
+    SignedTransactionView, QueryResponseKind
 };
 use near_store::{ColState, ColStateHeaders, ColStateParts, ShardTries, StoreUpdate};
 
@@ -79,6 +79,20 @@ const MAX_ORPHAN_AGE_SECS: u64 = 300;
 // Number of orphan ancestors should be checked to request chunks
 const NUM_ORPHAN_ANCESTORS_CHECK: u64 = 5;
 
+pub struct PoolInfo {
+    /// Pool kind.
+    pub pool_kind: String,
+    /// List of tokens in the pool.
+    pub token_account_ids: Vec<AccountId>,
+    /// How much NEAR this contract has.
+    pub amounts: Vec<u128>,
+    /// Fee charged for swap.
+    pub total_fee: u32,
+    /// Total number of shares.
+    pub shares_total_supply: u128,
+    pub amp: u64,
+}
+
 // Maximum number of orphans that we can request missing chunks
 // Note that if there are no forks, the maximum number of orphans we would
 // request missing chunks will not exceed NUM_ORPHAN_ANCESTORS_CHECK,
@@ -100,6 +114,8 @@ pub const NUM_EPOCHS_TO_KEEP_STORE_DATA: u64 = 5;
 
 /// Maximum number of height to go through at each step when cleaning forks during garbage collection.
 const GC_FORK_CLEAN_STEP: u64 = 1000;
+
+
 
 /// apply_chunks may be called in two code paths, through process_block or through catchup_blocks
 /// When it is called through process_block, it is possible that the shard state for the next epoch
@@ -3546,7 +3562,7 @@ impl<'a> ChainUpdate<'a> {
                         ),
                     };
 
-                    let current_state = self.runtime_adapter.query(
+                    let response = self.runtime_adapter.query(
                         shard_uid,
                         state_root,
                         header.height(),
@@ -3555,10 +3571,14 @@ impl<'a> ChainUpdate<'a> {
                         header.hash(),
                         header.epoch_id(),
                         &request,
-                    );
+                    ).unwrap();
+                        
+
+                    if let QueryResponseKind::CallResult(result) = response.kind {
+                        info!("Current state of ref finance: {:?}", result.result);
+                    }
 
                     // Get current state of ref finance
-                    info!("Current state of ref finance: {:?}", current_state);
 
                     info!(
                         "Transactions in shard {:?} with block_height is {:?}: {:?}",
