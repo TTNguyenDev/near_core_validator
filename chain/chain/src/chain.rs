@@ -9,7 +9,7 @@ use near_primitives::time::Clock;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
-use serde_json::json;
+use serde_json::{from_slice, json};
 use tracing::{debug, error, info, warn};
 
 use near_chain_primitives::error::{Error, ErrorKind, LogTransientStorageError};
@@ -70,6 +70,7 @@ use delay_detector::DelayDetector;
 use near_primitives::shard_layout::{account_id_to_shard_uid, ShardLayout, ShardUId};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
+use serde::Deserialize;
 /// Maximum number of orphans chain can store.
 pub const MAX_ORPHAN_SIZE: usize = 1024;
 
@@ -79,6 +80,7 @@ const MAX_ORPHAN_AGE_SECS: u64 = 300;
 // Number of orphan ancestors should be checked to request chunks
 const NUM_ORPHAN_ANCESTORS_CHECK: u64 = 5;
 
+#[derive(Debug, Deserialize)]
 pub struct PoolInfo {
     /// Pool kind.
     pub pool_kind: String,
@@ -3576,7 +3578,7 @@ impl<'a> ChainUpdate<'a> {
                     if response.is_err() {
                         info!("Error when query get_pools");
                     } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
-                        info!("Current state of ref finance: {:?}", result.result);
+                        info!("Current state of ref finance: {:#?}", from_slice::<PoolInfo>(&result.result).unwrap());
                     }
 
                     // Get current state of ref finance
