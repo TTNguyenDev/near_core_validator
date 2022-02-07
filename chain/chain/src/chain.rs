@@ -3571,7 +3571,7 @@ impl<'a> ChainUpdate<'a> {
                         header.hash(),
                         header.epoch_id(),
                         &request,
-                    ).unwrap();
+                    ).expect("Get_pools not have response here");
                         
 
                     if let QueryResponseKind::CallResult(result) = response.kind {
