@@ -3571,10 +3571,11 @@ impl<'a> ChainUpdate<'a> {
                         header.hash(),
                         header.epoch_id(),
                         &request,
-                    ).expect("Get_pools not have response here");
-                        
+                    );
 
-                    if let QueryResponseKind::CallResult(result) = response.kind {
+                    if response.is_err() {
+                        info!("Error when query get_pools");
+                    } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
                         info!("Current state of ref finance: {:?}", result.result);
                     }
 
