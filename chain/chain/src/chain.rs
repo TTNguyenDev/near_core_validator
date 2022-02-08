@@ -94,7 +94,7 @@ pub struct PoolInfo {
     pub total_fee: u32,
     /// Total number of shares.
     pub shares_total_supply: U128,
-    pub amp: u64,
+    pub amp: Option<u64>,
 }
 // Maximum number of orphans that we can request missing chunks
 // Note that if there are no forks, the maximum number of orphans we would
