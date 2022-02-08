@@ -70,7 +70,7 @@ use delay_detector::DelayDetector;
 use near_primitives::shard_layout::{account_id_to_shard_uid, ShardLayout, ShardUId};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use near_sdk::json_types::U128;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 /// Maximum number of orphans chain can store.
 pub const MAX_ORPHAN_SIZE: usize = 1024;
 
@@ -80,21 +80,22 @@ const MAX_ORPHAN_AGE_SECS: u64 = 300;
 // Number of orphan ancestors should be checked to request chunks
 const NUM_ORPHAN_ANCESTORS_CHECK: u64 = 5;
 
-#[derive(Debug, Deserialize)]
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+#[cfg_attr(not(target_arch = "wasm32"), derive(Debug, PartialEq))]
 pub struct PoolInfo {
     /// Pool kind.
     pub pool_kind: String,
     /// List of tokens in the pool.
-    pub token_account_ids: String,
+    pub token_account_ids: Vec<AccountId>,
     /// How much NEAR this contract has.
-    pub amounts: String,
+    pub amounts: Vec<U128>,
     /// Fee charged for swap.
     pub total_fee: u32,
     /// Total number of shares.
     pub shares_total_supply: U128,
     pub amp: u64,
 }
-
 // Maximum number of orphans that we can request missing chunks
 // Note that if there are no forks, the maximum number of orphans we would
 // request missing chunks will not exceed NUM_ORPHAN_ANCESTORS_CHECK,
@@ -3578,7 +3579,7 @@ impl<'a> ChainUpdate<'a> {
                     } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
                         info!(
                             "Current state of ref finance: {:#?}",
-                            from_slice::<PoolInfo>(&result.result)
+                            from_slice::<PoolInfo>(&result.result).unwrap()
                         );
                     }
 
