@@ -69,7 +69,7 @@ use actix::Message;
 use delay_detector::DelayDetector;
 use near_primitives::shard_layout::{account_id_to_shard_uid, ShardLayout, ShardUId};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
-
+use near_sdk::json_types::U128;
 use serde::Deserialize;
 /// Maximum number of orphans chain can store.
 pub const MAX_ORPHAN_SIZE: usize = 1024;
@@ -87,11 +87,11 @@ pub struct PoolInfo {
     /// List of tokens in the pool.
     pub token_account_ids: Vec<AccountId>,
     /// How much NEAR this contract has.
-    pub amounts: Vec<u128>,
+    pub amounts: Vec<U128>,
     /// Fee charged for swap.
     pub total_fee: u32,
     /// Total number of shares.
-    pub shares_total_supply: u128,
+    pub shares_total_supply: U128,
     pub amp: u64,
 }
 
