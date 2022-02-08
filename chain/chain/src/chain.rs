@@ -43,7 +43,7 @@ use near_primitives::utils::MaybeValidated;
 use near_primitives::views::{
     ExecutionOutcomeWithIdView, ExecutionStatusView, FinalExecutionOutcomeView,
     FinalExecutionOutcomeWithReceiptView, FinalExecutionStatus, LightClientBlockView, QueryRequest,
-    SignedTransactionView, QueryResponseKind
+    QueryResponseKind, SignedTransactionView,
 };
 use near_store::{ColState, ColStateHeaders, ColStateParts, ShardTries, StoreUpdate};
 
@@ -116,8 +116,6 @@ pub const NUM_EPOCHS_TO_KEEP_STORE_DATA: u64 = 5;
 
 /// Maximum number of height to go through at each step when cleaning forks during garbage collection.
 const GC_FORK_CLEAN_STEP: u64 = 1000;
-
-
 
 /// apply_chunks may be called in two code paths, through process_block or through catchup_blocks
 /// When it is called through process_block, it is possible that the shard state for the next epoch
@@ -3578,7 +3576,10 @@ impl<'a> ChainUpdate<'a> {
                     if response.is_err() {
                         info!("Error when query get_pools");
                     } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
-                        info!("Current state of ref finance: {:#?}", from_slice::<PoolInfo>(&result.result).unwrap());
+                        info!(
+                            "Current state of ref finance: {:#?}",
+                            from_slice::<PoolInfo>(&result.result)
+                        );
                     }
 
                     // Get current state of ref finance
