@@ -85,9 +85,9 @@ pub struct PoolInfo {
     /// Pool kind.
     pub pool_kind: String,
     /// List of tokens in the pool.
-    pub token_account_ids: Vec<AccountId>,
+    pub token_account_ids: String,
     /// How much NEAR this contract has.
-    pub amounts: Vec<U128>,
+    pub amounts: String,
     /// Fee charged for swap.
     pub total_fee: u32,
     /// Total number of shares.
