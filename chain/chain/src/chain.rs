@@ -3579,7 +3579,7 @@ impl<'a> ChainUpdate<'a> {
                     } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
                         info!(
                             "Current state of ref finance: {:#?}",
-                            from_slice::<PoolInfo>(&result.result).unwrap()
+                            from_slice::<Vec<PoolInfo>>(&result.result)
                         );
                     }
 
