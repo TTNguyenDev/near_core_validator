@@ -9,7 +9,8 @@ use near_primitives::time::Clock;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
-use serde_json::{from_slice, json};
+// use serde_json::{from_slice, json};
+use serde_json::json;
 use tracing::{debug, error, info, warn};
 
 use near_chain_primitives::error::{Error, ErrorKind, LogTransientStorageError};
@@ -3574,14 +3575,14 @@ impl<'a> ChainUpdate<'a> {
                         &request,
                     );
 
-                    // if response.is_err() {
-                    //     info!("Error when query get_pools");
-                    // } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
-                    //     info!(
-                    //         "Current state of ref finance: {:#?}",
-                    //         from_slice::<Vec<PoolInfo>>(&result.result)
-                    //     );
-                    // }
+                    if response.is_err() {
+                        info!("Error when query get_pools");
+                    } else if let QueryResponseKind::CallResult(_result) = response.unwrap().kind {
+                        // info!(
+                        //     "Current state of ref finance: {:#?}",
+                        //     from_slice::<Vec<PoolInfo>>(&result.result)
+                        // );
+                    }
 
                     // Get current state of ref finance
 
