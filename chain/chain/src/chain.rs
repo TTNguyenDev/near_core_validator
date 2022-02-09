@@ -3574,14 +3574,14 @@ impl<'a> ChainUpdate<'a> {
                         &request,
                     );
 
-                    if response.is_err() {
-                        info!("Error when query get_pools");
-                    } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
-                        info!(
-                            "Current state of ref finance: {:#?}",
-                            from_slice::<Vec<PoolInfo>>(&result.result)
-                        );
-                    }
+                    // if response.is_err() {
+                    //     info!("Error when query get_pools");
+                    // } else if let QueryResponseKind::CallResult(result) = response.unwrap().kind {
+                    //     info!(
+                    //         "Current state of ref finance: {:#?}",
+                    //         from_slice::<Vec<PoolInfo>>(&result.result)
+                    //     );
+                    // }
 
                     // Get current state of ref finance
 
