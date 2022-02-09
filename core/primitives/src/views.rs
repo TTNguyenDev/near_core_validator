@@ -216,6 +216,12 @@ pub struct ViewStateResult {
 }
 
 #[cfg_attr(feature = "deepsize_feature", derive(deepsize::DeepSizeOf))]
+#[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
+pub struct ViewShardOfAccountResult {
+    pub shard_id: ShardId,
+}
+
+#[cfg_attr(feature = "deepsize_feature", derive(deepsize::DeepSizeOf))]
 #[derive(
     BorshSerialize, BorshDeserialize, Serialize, Deserialize, Debug, PartialEq, Eq, Clone, Default,
 )]
@@ -257,6 +263,7 @@ pub enum QueryResponseKind {
     ViewCode(ContractCodeView),
     ViewState(ViewStateResult),
     CallResult(CallResult),
+    ViewShardOfAccountResult(ViewShardOfAccountResult),
     AccessKey(AccessKeyView),
     AccessKeyList(AccessKeyList),
 }
@@ -282,6 +289,9 @@ pub enum QueryRequest {
     },
     ViewAccessKeyList {
         account_id: AccountId,
+    },
+    ViewShardOfAccount {
+        account_id: AccountId
     },
     CallFunction {
         account_id: AccountId,

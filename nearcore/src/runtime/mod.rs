@@ -39,7 +39,7 @@ use near_primitives::types::{
 use near_primitives::version::ProtocolVersion;
 use near_primitives::views::{
     AccessKeyInfoView, CallResult, EpochValidatorInfo, QueryRequest, QueryResponse,
-    QueryResponseKind, ViewApplyState, ViewStateResult,
+    QueryResponseKind, ViewApplyState, ViewStateResult, ViewShardOfAccountResult,
 };
 use near_vm_runner::precompile_contract;
 
@@ -1473,9 +1473,7 @@ impl RuntimeAdapter for NightshadeRuntime {
                     })?;
                     (epoch_info.epoch_height(), epoch_info.protocol_version())
                 };
-
-                let call_function_result = self
-                    .call_function(
+                    let call_function_result = self .call_function(
                         &shard_uid,
                         *state_root,
                         block_height,
@@ -1540,6 +1538,16 @@ impl RuntimeAdapter for NightshadeRuntime {
                     block_hash: *block_hash,
                 })
             }
+            QueryRequest::ViewShardOfAccount { account_id: _ } => {
+                Ok(QueryResponse {
+                    kind: QueryResponseKind::ViewShardOfAccountResult(ViewShardOfAccountResult {
+                        shard_id: shard_uid.shard_id()
+                        }),
+                    block_height,
+                    block_hash: *block_hash
+                })
+
+            },
             QueryRequest::ViewAccessKey { account_id, public_key } => {
                 let access_key = self
                     .view_access_key(&shard_uid, *state_root, account_id, public_key)

@@ -37,7 +37,7 @@ use near_primitives::validator_signer::InMemoryValidatorSigner;
 use near_primitives::version::{ProtocolVersion, PROTOCOL_VERSION};
 use near_primitives::views::{
     AccessKeyInfoView, AccessKeyList, CallResult, ContractCodeView, EpochValidatorInfo,
-    QueryRequest, QueryResponse, QueryResponseKind, ViewStateResult,
+    QueryRequest, QueryResponse, QueryResponseKind, ViewStateResult, ViewShardOfAccountResult
 };
 use near_store::test_utils::create_test_store;
 use near_store::{
@@ -912,6 +912,13 @@ impl RuntimeAdapter for KeyValueRuntime {
                 }),
                 block_height,
                 block_hash: *block_hash,
+            }),
+            QueryRequest::ViewShardOfAccount { .. } => Ok(QueryResponse {
+                kind: QueryResponseKind::ViewShardOfAccountResult(ViewShardOfAccountResult {
+                   shard_id: _shard_id.shard_id()
+                    }),
+                block_height,
+                block_hash: *block_hash
             }),
             QueryRequest::CallFunction { .. } => Ok(QueryResponse {
                 kind: QueryResponseKind::CallResult(CallResult {

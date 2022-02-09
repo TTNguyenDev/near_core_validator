@@ -77,8 +77,10 @@ pub enum QueryResponseKind {
     ViewAccount(near_primitives::views::AccountView),
     ViewCode(near_primitives::views::ContractCodeView),
     ViewState(near_primitives::views::ViewStateResult),
+    ViewShardOfAccount(near_primitives::views::ViewShardOfAccountResult),
     CallResult(near_primitives::views::CallResult),
     AccessKey(near_primitives::views::AccessKeyView),
+
     AccessKeyList(near_primitives::views::AccessKeyList),
 }
 
@@ -140,6 +142,7 @@ impl RpcQueryRequest {
                         ))
                     }
                 },
+                "view_shard" => near_primitives::views::QueryRequest::ViewShardOfAccount { account_id },
                 _ => {
                     return Err(crate::errors::RpcParseError(format!(
                         "Unknown path {}",
@@ -240,6 +243,9 @@ impl From<near_primitives::views::QueryResponseKind> for QueryResponseKind {
             }
             near_primitives::views::QueryResponseKind::AccessKey(access_key_view) => {
                 Self::AccessKey(access_key_view)
+            }
+            near_primitives::views::QueryResponseKind::ViewShardOfAccountResult(shard_id) => {
+                Self::ViewShardOfAccount(shard_id)
             }
             near_primitives::views::QueryResponseKind::AccessKeyList(access_key_list) => {
                 Self::AccessKeyList(access_key_list)

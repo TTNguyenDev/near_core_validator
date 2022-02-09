@@ -244,6 +244,7 @@ impl ViewClientActor {
             QueryRequest::ViewState { account_id, .. } => account_id,
             QueryRequest::ViewAccessKey { account_id, .. } => account_id,
             QueryRequest::ViewAccessKeyList { account_id, .. } => account_id,
+            QueryRequest::ViewShardOfAccount { account_id, .. } => account_id, 
             QueryRequest::CallFunction { account_id, .. } => account_id,
             QueryRequest::ViewCode { account_id, .. } => account_id,
         };
