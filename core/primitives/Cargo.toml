@@ -27,6 +27,8 @@ hex = "0.4"
 num-rational = { version = "0.3", features = ["serde"] }
 primitive-types = "0.10"
 deepsize = { version = "0.2.0", features = ["chrono"], optional=true }
+tracing = "0.1.13"
+
 
 borsh = { version = "0.9", features = ["rc"] }
 

@@ -10,7 +10,7 @@ use crate::borsh::maybestd::io::Cursor;
 use crate::hash::CryptoHash;
 use crate::types::{AccountId, NumShards};
 use std::collections::HashMap;
-
+use tracing::info;
 /// This file implements two data structure `ShardLayout` and `ShardUId`
 ///
 /// `ShardLayout`
@@ -133,6 +133,9 @@ impl ShardLayout {
         } else {
             None
         };
+
+        
+        info!("Shardlayout 1: {:?} {:?}", fixed_shards, boundary_accounts);
         Self::V1(ShardLayoutV1 {
             fixed_shards,
             boundary_accounts,
