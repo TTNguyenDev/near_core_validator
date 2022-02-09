@@ -913,9 +913,9 @@ impl RuntimeAdapter for KeyValueRuntime {
                 block_height,
                 block_hash: *block_hash,
             }),
-            QueryRequest::ViewShardOfAccount { .. } => Ok(QueryResponse {
+            QueryRequest::ViewShardOfAccount { account_id, .. } => Ok(QueryResponse {
                 kind: QueryResponseKind::ViewShardOfAccountResult(ViewShardOfAccountResult {
-                   shard_id: _shard_id.shard_id()
+                   shard_id: self.account_id_to_shard_id(account_id, _epoch_id).unwrap() 
                     }),
                 block_height,
                 block_hash: *block_hash

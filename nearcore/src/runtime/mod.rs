@@ -1538,10 +1538,10 @@ impl RuntimeAdapter for NightshadeRuntime {
                     block_hash: *block_hash,
                 })
             }
-            QueryRequest::ViewShardOfAccount { account_id: _ } => {
+            QueryRequest::ViewShardOfAccount { account_id } => {
                 Ok(QueryResponse {
                     kind: QueryResponseKind::ViewShardOfAccountResult(ViewShardOfAccountResult {
-                        shard_id: shard_uid.shard_id()
+                        shard_id: account_id_to_shard_id(account_id, &self.get_shard_layout(epoch_id).unwrap())
                         }),
                     block_height,
                     block_hash: *block_hash
